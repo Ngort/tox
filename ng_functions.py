@@ -110,13 +110,13 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
         
         if save_fig:
             if qtitle != color:
-                figtitle = fix_filename(qtitle) + '_' + fix_filename(color)
+                figtitle = fix_filename(filt) + '_'*(len(filt)!=0) + fix_filename(qtitle) + '_by_' + fix_filename(color)
             else:
-                figtitle = fix_filename(color)
+                figtitle = fix_filename(filt) + '_'*(len(filt)!=0) + fix_filename(color)
 
             figname = '{}/{}_{}_{}.pdf'.format(folder, figtitle, now(), qindex)
 
-            qfig.savefig(fname=figname, dpi=dpi)
+            qfig.savefig(fname=figname, dpi=dpi, bbox_inches='tight')
             print('{} done!'.format(figname))
         
         
