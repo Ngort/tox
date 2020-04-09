@@ -5,14 +5,18 @@ import pandas as pd
 import scanpy as sc
 import datetime
 import itertools as iter
+import re
 
+
+def fix_filename(string):
+    return re.sub(r'\W', '', str(string).replace(' == ','_').replace(' & ','_').replace(' ', '_'))
 
 def now():
     """spring current date and time as filename-friendly string"""
     return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
 
 
-def umap_plot(anndata_raw, color : list, vmax : float, filt='', split_by_cats = '', fname = 'figures/tmp', spring_palette=True, dpi=500, norm='log', cmap='viridis', return_fig=True, **kwargs):
+def umap_plot(anndata_raw, color : list, vmax : float, folder='figures', filt='', split_by_cats = '', spring_palette=True, dpi=500, norm='log', cmap='viridis', show_fig=True, return_fig=True, **kwargs):
     
     cell_subset_cmap =  {'B cells': '#4666B0',
                      'Basophils': '#4c2e4d',
@@ -47,7 +51,6 @@ def umap_plot(anndata_raw, color : list, vmax : float, filt='', split_by_cats = 
                      'T_doublet_Neutro': '#32ffc3',
                      'T_reg': '#0000f5'}
     
- 
     
     if filt:
         anndata = anndata_raw[anndata_raw.obs.eval(filt)]
@@ -83,10 +86,10 @@ def umap_plot(anndata_raw, color : list, vmax : float, filt='', split_by_cats = 
     
     if queries:
         for q in queries:
-            qdict[q] = anndata[anndata.obs.eval(q)]
+            qdict[q] = copy(anndata[anndata.obs.eval(q)])
 
     if len(qdict) == 0:
-        qdict['Full data set'] = anndata
+        qdict[color] = anndata
         
     qindex = 1
     
@@ -103,9 +106,17 @@ def umap_plot(anndata_raw, color : list, vmax : float, filt='', split_by_cats = 
         plt.suptitle(qtitle)
         qfig.set_dpi(dpi)
         
-        figname = '{}_{}_{}.pdf'.format(fname, now(), qindex)
+        if qtitle != color:
+            figtitle = fix_filename(qtitle) + '_' + fix_filename(color)
+        else:
+            figtitle = fix_filename(color)
+        
+        figname = '{}/{}_{}_{}.pdf'.format(folder, figtitle, now(), qindex)
         
         qfig.savefig(fname=figname, dpi=dpi)
         print('{} done!'.format(figname))
+        
+        if show_fig == False:
+            plt.close()
         
         qindex += 1
