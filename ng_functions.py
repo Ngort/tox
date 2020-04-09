@@ -16,7 +16,7 @@ def now():
     return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
 
 
-def umap_plot(anndata_raw, color : list, vmax : float, folder='figures', filt='', split_by_cats = '', spring_palette=True, dpi=500, norm='log', cmap='viridis', show_fig=True, return_fig=True, **kwargs):
+def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', spring_palette=True, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
     
     cell_subset_cmap =  {'B cells': '#4666B0',
                      'Basophils': '#4c2e4d',
@@ -86,12 +86,14 @@ def umap_plot(anndata_raw, color : list, vmax : float, folder='figures', filt=''
     
     if queries:
         for q in queries:
-            qdict[q] = copy(anndata[anndata.obs.eval(q)])
+            qdict[q] = anndata[anndata.obs.eval(q)]
 
     if len(qdict) == 0:
         qdict[color] = anndata
         
     qindex = 1
+    fig_list = []
+    
     
     for qtitle, qdata in qdict.items():
         
@@ -106,17 +108,22 @@ def umap_plot(anndata_raw, color : list, vmax : float, folder='figures', filt=''
         plt.suptitle(qtitle)
         qfig.set_dpi(dpi)
         
-        if qtitle != color:
-            figtitle = fix_filename(qtitle) + '_' + fix_filename(color)
-        else:
-            figtitle = fix_filename(color)
+        if save_fig:
+            if qtitle != color:
+                figtitle = fix_filename(qtitle) + '_' + fix_filename(color)
+            else:
+                figtitle = fix_filename(color)
+
+            figname = '{}/{}_{}_{}.pdf'.format(folder, figtitle, now(), qindex)
+
+            qfig.savefig(fname=figname, dpi=dpi)
+            print('{} done!'.format(figname))
         
-        figname = '{}/{}_{}_{}.pdf'.format(folder, figtitle, now(), qindex)
-        
-        qfig.savefig(fname=figname, dpi=dpi)
-        print('{} done!'.format(figname))
         
         if show_fig == False:
             plt.close()
         
         qindex += 1
+        fig_list.append(qfig)
+        
+    return fig_list
