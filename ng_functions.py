@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import scanpy as sc
 import datetime
-import itertools as iter
+from itertools import product
 import re
 
 
@@ -16,41 +16,49 @@ def now():
     return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
 
 
-def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', spring_palette=True, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
+def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', palette_dictionary = None, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
+    
     
     cell_subset_cmap =  {'B cells': '#4666B0',
-                     'Basophils': '#4c2e4d',
-                     'DC1': '#ff0000',
-                     'DC2': '#ff9900',
-                     'DC3': '#990000',
-                     'Mac1': '#FF9ACC',
-                     'Mac2': '#66ffff',
-                     'Mac3': '#9966ff',
-                     'Mac4': '#33cccc',
-                     'Mono1': '#e1e74b',
-                     'Mono2': '#6d700f',
-                     'Mono3': '#0099ff',
-                     'MonoDC': '#00cc00',
-                     'N1': '#0a5e75',
-                     'N2': '#66ffcc',
-                     'N3': '#008055',
-                     'N4': '#12a9d3',
-                     'N5': '#666699',
-                     'N6': '#EE2C7C',
-                     'NK cells': '#1F6935',
-                     'Plasma_cells': '#c0ff36',
-                     'pDC': '#a094ff',
-                     'T1' : '#FFD900',
-                     'T2' : '#BA0899',
-                     'T3' : '#CC263C',
-                     'T_CD4': '#0098ff',
-                     'T_CD8': '#18ffdd',
-                     'T_Calca_?': '#00bcff',
-                     'T_Cd163l1_?': '#f50b00',
-                     'T_doublet_B': '#6cff89',
-                     'T_doublet_Neutro': '#32ffc3',
-                     'T_reg': '#0000f5'}
+                         'Basophils': '#4c2e4d',
+                         'DC1': '#ff0000',
+                         'DC2': '#ff9900',
+                         'DC3': '#990000',
+                         'Mac1': '#FF9ACC',
+                         'Mac2': '#66ffff',
+                         'Mac3': '#9966ff',
+                         'Mac4': '#33cccc',
+                         'Mono1': '#e1e74b',
+                         'Mono2': '#6d700f',
+                         'Mono3': '#0099ff',
+                         'MonoDC': '#00cc00',
+                         'N1': '#0a5e75',
+                         'N2': '#66ffcc',
+                         'N3': '#008055',
+                         'N4': '#12a9d3',
+                         'N5': '#666699',
+                         'N6': '#EE2C7C',
+                         'NK cells': '#1F6935',
+                         'Plasma_cells': '#c0ff36',
+                         'pDC': '#a094ff',
+                         'T1' : '#FFD900',
+                         'T2' : '#BA0899',
+                         'T3' : '#CC263C',
+                         'T_CD4': '#0098ff',
+                         'T_CD8': '#18ffdd',
+                         'T_Calca_?': '#00bcff',
+                         'T_Cd163l1_?': '#f50b00',
+                         'T_doublet_B': '#6cff89',
+                         'T_doublet_Neutro': '#32ffc3',
+                         'T_reg': '#0000f5'}
+
+    if palette_dictionary:
+        subset_dict = palette_dictionary
+    else:
+        subset_dict = cell_subset_cmap
     
+
+
     
     if filt:
         anndata = anndata_raw[anndata_raw.obs.eval(filt)]
@@ -73,7 +81,7 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
             elif len(split_by_cats) == 2:
 
                 cat_a, cat_b = split_by_cats
-                queries = {'{} == "{}" & {} == "{}"'.format(cat_a, x, cat_b, y) for x,y in  list(itertools.product(anndata.obs[cat_a].cat.categories, anndata.obs[cat_b].cat.categories))}
+                queries = {'{} == "{}" & {} == "{}"'.format(cat_a, x, cat_b, y) for x,y in  list(product(anndata.obs[cat_a].cat.categories, anndata.obs[cat_b].cat.categories))}
 
             else:
                 raise('Too many arguments.')
@@ -101,7 +109,7 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
                    cmap = cmap, 
                    norm = matplotlib.colors.SymLogNorm(linthresh=0.25, base=2),
                    color = color,
-                   palette = qdata.obs['minor_subset'].cat.categories.map(cell_subset_cmap).tolist(),
+                   palette = qdata.obs['minor_subset'].cat.categories.map(subset_dict).tolist(),
                    return_fig=True, **kwargs)
 
 
