@@ -97,7 +97,7 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
             qdict[q] = anndata[anndata.obs.eval(q)]
 
     if len(qdict) == 0:
-        qdict[color] = anndata
+        qdict[fix_filename(color)] = anndata
         
     qindex = 1
     fig_list = []
@@ -117,7 +117,7 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
         qfig.set_dpi(dpi)
         
         if save_fig:
-            if qtitle != color:
+            if qtitle != fix_filename(color):
                 figtitle = fix_filename(filt) + '_'*(len(filt)!=0) + fix_filename(qtitle) + '_by_' + fix_filename(color)
             else:
                 figtitle = fix_filename(filt) + '_'*(len(filt)!=0) + fix_filename(color)
