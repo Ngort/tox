@@ -8,18 +8,15 @@ from itertools import product
 import re
 
 
-def fix_filename(string):
-    return re.sub(r'\W', '', str(string).replace(' == ','_').replace(' & ','_').replace(' ', '_'))
+cell_type_cmap = {'B cells': '#4666B0',
+                    'Basophils': '#4C2E4D',
+                    'MoMacDC':'#FF9ACC',
+                    'NK cells': '#1F6935',
+                    'Neutrophils' : '#66FFCC',
+                    'T cells' : '#FFD900',
+                    'pDC': '#A094FF'}
 
-def now():
-    """spring current date and time as filename-friendly string"""
-    return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
-
-
-def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', palette_dictionary = None, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
-    
-    
-    cell_subset_cmap =  {'B cells': '#4666B0',
+cell_subset_cmap =  {'B cells': '#4666B0',
                          'Basophils': '#4c2e4d',
                          'DC1': '#ff0000',
                          'DC2': '#ff9900',
@@ -51,6 +48,18 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
                          'T_doublet_B': '#6cff89',
                          'T_doublet_Neutro': '#32ffc3',
                          'T_reg': '#0000f5'}
+
+
+def fix_filename(string):
+    return re.sub(r'\W', '', str(string).replace(' == ','_').replace(' & ','_').replace(' ', '_'))
+
+def now():
+    """spring current date and time as filename-friendly string"""
+    return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
+
+
+def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', palette_dictionary = None, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
+    
 
     if palette_dictionary:
         subset_dict = palette_dictionary
