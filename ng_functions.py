@@ -50,6 +50,33 @@ cell_subset_cmap =  {'B cells': '#4666B0',
                          'T_reg': '#0000f5'}
 
 
+cell_subset_dict = {'B cells' : 'B cells',
+                     'Basophils' : 'Basophils',
+                     'DC1' : 'MoMacDC',
+                     'DC2' : 'MoMacDC',
+                     'DC3' : 'MoMacDC',
+                     'Mac1' : 'MoMacDC',
+                     'Mac2' : 'MoMacDC',
+                     'Mac3' : 'MoMacDC',
+                     'Mac4' : 'MoMacDC',
+                     'Mono1' : 'MoMacDC',
+                     'Mono2' : 'MoMacDC',
+                     'Mono3' : 'MoMacDC',
+                     'MonoDC' : 'MoMacDC',
+                     'N1' : 'Neutrophils',
+                     'N2' : 'Neutrophils',
+                     'N3' : 'Neutrophils',
+                     'N4' : 'Neutrophils',
+                     'N5' : 'Neutrophils',
+                     'N6' : 'Neutrophils',
+                     'N6' : 'Neutrophils',
+                     'NK cells' : 'NK cells',
+                     'T1' : 'T cells',
+                     'T2' : 'T cells',
+                     'T3' : 'T cells',
+                     'pDC' : 'pDC'}
+
+
 def fix_filename(string):
     return re.sub(r'\W', '', str(string).replace(' == ','_').replace(' & ','_').replace(' ', '_'))
 
@@ -58,16 +85,8 @@ def now():
     return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
 
 
-def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', palette_dictionary = None, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
+def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', legend_loc = 'on data', legend_fontsize = 6, legend_fontoutline= 2, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
     
-
-    if palette_dictionary:
-        subset_dict = palette_dictionary
-    else:
-        subset_dict = cell_subset_cmap
-    
-
-
     
     if filt:
         anndata = anndata_raw[anndata_raw.obs.eval(filt)]
@@ -118,11 +137,14 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
                    cmap = cmap, 
                    norm = matplotlib.colors.SymLogNorm(linthresh=0.25, base=2),
                    color = color,
-                   palette = qdata.obs['minor_subset'].cat.categories.map(subset_dict).tolist(),
+                   legend_loc = legend_loc, 
+                   legend_fontsize = legend_fontsize, 
+                   legend_fontoutline = legend_fontoutline,
                    return_fig=True, **kwargs)
 
 
-        plt.suptitle(qtitle)
+        plt.suptitle(qtitle, y=1.05, fontweight = 'bold')
+
         qfig.set_dpi(dpi)
         
         if save_fig:
@@ -143,4 +165,4 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
         qindex += 1
         fig_list.append(qfig)
         
-    return fig_list
+        return fig_list
