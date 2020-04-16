@@ -165,4 +165,4 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
         qindex += 1
         fig_list.append(qfig)
         
-        return fig_list
+    return fig_list
