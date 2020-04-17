@@ -85,7 +85,7 @@ def now():
     return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
 
 
-def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', legend_loc = 'on data', legend_fontsize = 6, legend_fontoutline= 2, dpi=500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
+def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', legend_loc = 'on data', legend_fontsize = 6, legend_fontoutline= 2, dpi_show = 100, dpi_save = 500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
     
     
     if filt:
@@ -145,7 +145,7 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
 
         plt.suptitle(qtitle, y=1.05, fontweight = 'bold')
 
-        qfig.set_dpi(dpi)
+        qfig.set_dpi(dpi_show)
         
         if save_fig:
             if qtitle != fix_filename(color):
@@ -155,7 +155,7 @@ def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', 
 
             figname = '{}/{}_{}_{}.pdf'.format(folder, figtitle, now(), qindex)
 
-            qfig.savefig(fname=figname, dpi=dpi, bbox_inches='tight')
+            qfig.savefig(fname=figname, dpi = dpi_save, bbox_inches='tight')
             print('{} done!'.format(figname))
         
         
