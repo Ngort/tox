@@ -36,11 +36,18 @@ cell_subset_cmap =  {'B cells': '#4666B0',
                          'N5': '#666699',
                          'N6': '#EE2C7C',
                          'NK cells': '#1F6935',
+                         'NK': '#1F6935', #same as NK cells
+                         'NKT': '#ccad00', #same as NK cells
                          'Plasma_cells': '#c0ff36',
                          'pDC': '#a094ff',
                          'T1' : '#FFD900',
                          'T2' : '#BA0899',
                          'T3' : '#CC263C',
+                         'Th1' : '#0098ff', #same as CD4
+                         'Th17' : '#BA0899',
+                         'Tmix' : '#CC263C',
+                         'Treg' : '0000f5', #same as T_reg
+                         'T8' : '#18ffdd', #same as CD8
                          'T_CD4': '#0098ff',
                          'T_CD8': '#18ffdd',
                          'T_Calca_?': '#00bcff',
@@ -90,7 +97,7 @@ def filter_genelist(genelist, anndata):
 
 
 
-def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', legend_loc = 'on data', legend_fontsize = 6, legend_fontoutline= 2, dpi_show = 100, dpi_save = 500, norm='log', cmap='viridis', show_fig=True, save_fig=True, return_fig=True, **kwargs):
+def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', legend_loc = 'on data', legend_fontsize = 6, legend_fontoutline= 2, dpi_show = 100, dpi_save = 500, norm='log', cmap='viridis', show_fig=True, save_fig=False, return_fig=True, **kwargs):
     
     
     if filt:
