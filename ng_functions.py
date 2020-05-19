@@ -56,6 +56,48 @@ cell_subset_cmap =  {'B cells': '#4666B0',
                          'T_doublet_Neutro': '#32ffc3',
                          'T_reg': '#0000f5'}
 
+cell_subset_cmap2 =     {'B cells': '#4666B0',
+                         'Basophils': '#4c2e4d',
+                         'DC1': '#ff0000',
+                         'DC2': '#ff9900',
+                         'DC3': '#990000',
+                         'Mac1': '#FF9ACC',
+                         'Mac2': '#66ffff',
+                         'Mac3': '#9966ff',
+                         'Mac4': '#33cccc',
+                         'Mono1': '#e1e74b',
+                         'Mono2': '#6d700f',
+                         'Mono3': '#0099ff',
+                         'MonoDC': '#00cc00',
+                         'N1': '#0a5e75',
+                         'N2': '#66ffcc',
+                         'N3': '#008055',
+                         'N4': '#12a9d3',
+                         'N5': '#666699',
+                         'N6': '#EE2C7C',
+                         'NK cells': '#1F6935',
+                         'NK': '#1F6935', #same as NK cells
+                         'NKT': '#ccad00', #same as NK cells
+                         'Plasma_cells': '#c0ff36',
+                         'pDC': '#a094ff',
+                         'T1' : '#FFD900',
+                         'T2' : '#BA0899',
+                         'T3' : '#CC263C',
+                         'Th1' : '#0098ff', #same as CD4
+                         'Th17' : '#BA0899',
+                         'Tmix' : '#CC263C',
+                         'Treg' : '0000f5', #same as T_reg
+                         'T8' : '#18ffdd', #same as CD8
+                         'T_CD4': '#0098ff',
+                         'T_CD8': '#18ffdd',
+                         'T_Calca_?': '#00bcff',
+                         'T_Cd163l1_?': '#f50b00',
+                         'T_doublet_B': '#6cff89',
+                         'T_doublet_Neutro': '#32ffc3',
+                         'T_reg': '#0000f5'}
+
+
+
 
 cell_subset_dict = {'B cells' : 'B cells',
                      'Basophils' : 'Basophils',
@@ -91,11 +133,12 @@ def now():
     """spring current date and time as filename-friendly string"""
     return datetime.datetime.now().strftime('%y%m%d_%Hh%M')
 
+
 def filter_genelist(genelist, anndata):
-    return [g for g in genelist if g in anndata.var_names]
+    return [g.title() for g in genelist if g.title() in anndata.var_names]
     
 
-
+#to do: add Z-scored flag
 
 def umap_plot(anndata_raw, color : list, vmax = 500, folder='figures', filt='', split_by_cats = '', legend_loc = 'on data', legend_fontsize = 6, legend_fontoutline= 2, dpi_show = 100, dpi_save = 500, norm='log', cmap='viridis', show_fig=True, save_fig=False, return_fig=True, **kwargs):
     
